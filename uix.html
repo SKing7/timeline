@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="ie=edge" />
+	<title>去哪儿UIGuide</title>
+	<script src="avalon.js"></script>
+	<script src="static/js/bezier.js"></script>
+	<script src="doc/index.js"></script>
+	<link rel=stylesheet type=text/css href="static/css/base.css">
+</head>
+<!-- http://ux.etao.com/page2012 -->
+<body class="ms-controller" ms-controller="www_uiguide">
+<div  id="parallax" class="parallax-container" ms-css-height="outerHeight">
+	<div class="parallax parallax2">
+		<div class="circle-box">
+			<span ms-repeat="circles" ms-class="circle circle-{{$index + 1}}" data-repeat-rendered="circleCb"></span>
+		</div>
+	</div>
+	<div class="parallax parallax1">
+		<div class="month-box">
+			<span ms-repeat-m="months" ms-class="month month--m{{m.key}}"></span>
+		</div>
+	</div>
+	<div class="parallax parallax0">
+		<div class="tree">
+			<div class="month-wrapper" ms-repeat-m="months">
+				<div class="tree__item"  data-repeat-rendered="cb"  ms-repeat-leaf="m.item" ms-class="{{ $index % 2 === 0 ? ('tree__item--m' + m.key) : ('tree__item--m' + m.key + ' tree__item--right')}}">
+					<div class="tree__item__main">
+						<img width="400" height="245" ms-src="{{leaf.cover}}"/>
+					</div>
+					<div class="icon-1 icon__marker"></div>
+				</div>
+			</div>
+		</div>
+		<div class="tree-foot"></div>
+	</div>
+</div>
+    <script>
+		var ui = {};
+		ui. getComputedStyle = function(elem, pro) {
+			if (!pro) return window.getComputedStyle(elem, null);
+			return window.getComputedStyle(elem, null).getPropertyValue(pro);
+		}
+		var scrollPx = document.body.scrollTop;
+		var action = '';
+		var ndP0 = getElementsByClassName('parallax0')[0];
+		var ndP1 = getElementsByClassName('parallax1')[0];
+		var ndP2 = getElementsByClassName('parallax2')[0];
+		ndP0.style.top=0;
+		ndP1.style.top=0;
+		ndP2.style.top=0;
+		var windowH = window.innerHeight;
+		var cardinal = [1, 1.5, 1.8];
+		avalon.define('www_uiguide', function (vm) {
+			var supportTransition = supportFeature('transition');
+			var index = 0;
+			var months = [];
+			for(var i in window.indexData) {
+				if (indexData.hasOwnProperty(i)) {
+					months.push({
+						key:i,
+						item: indexData[i]
+					});
+				}
+			}
+			var circles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
+			var nlNodeToScroll = [];
+			vm.circles = circles;
+			vm.months = months;
+			vm.cb = cb;
+			vm.circleCb = function () {
+				var circles = getElementsByClassName('circle');
+				for(var i = 0; i < circles.length; i++) {
+					circles[i].style.top = (i + 1) * getRandom(270, 400) + 'px'
+				}
+			}
+			vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
+			avalon.bind(window, 'load', function () {
+				vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
+			});
+			var timer;
+
+			var duration = 800; 
+		//	var timingFun = Bezier.easeInOut;
+			var timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
+
+
+			var storeScrollTop = document.body.scrollTop;
+			avalon.bind(window, 'scroll', function () {
+				var sTop  = document.body.scrollTop;
+				var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
+				storeScrollTop = sTop; 
+				if (supportTransition) {
+					scroll();
+				} else {
+					window.clearInterval(timer);
+					var scrollTop = parseInt(document.body.scrollTop, 10);
+					var top,
+						diff,	
+						step = 5,
+						initTop = [],
+						startTime = new Date().getTime(),
+						nd;
+
+					for (var i = 0; i < nlNodeToScroll.length; i++) {
+						initTop[i] = parseInt(nlNodeToScroll[i].style.top, 10) || 0;
+					}
+
+					timer = window.setInterval(function () {
+						for (var i = 0; i < nlNodeToScroll.length; i++) {
+							nd = nlNodeToScroll[i];
+							nd.style.top = getPx(initTop[i], i) * cardinal[i] + 'px' 
+						}
+					}, 1000 / 60);
+					function getPx(initTop, i) {
+						if (isNaN(+initTop)) return;
+						var diffIndex = Math.min((new Date().getTime() - startTime) / duration, 1);
+						var target = initTop / cardinal[i] +  timingFun(diffIndex, 800) * (-scrollTop - initTop / cardinal[i]);
+						return delta > 0 ? Math.max(target, -scrollTop) : Math.min(target, -scrollTop);
+					}	
+				}
+			});
+			function cb() {
+				var child = getFirstNode(this);
+				if (!child) return;
+				var monthNum = child.className.match(/tree__item--m(\d+)/)[1]
+				var ndTarget = getElementsByClassName('month--m' + monthNum)[0];
+				var oStyle = ui.getComputedStyle(child);
+				var viewTop  = getElementViewTop(child);
+				//根据月份下的第一个项目设置坐标位置
+				ndTarget.style.left = (parseInt(oStyle.getPropertyValue('width'), 10) + getRandom(120, 250)) + 'px';
+				ndTarget.style.top =  (viewTop - 0) * (cardinal[1] -1) + getRandom(viewTop, viewTop + parseInt(oStyle.getPropertyValue('height'), 10) - parseInt(ui.getComputedStyle(ndTarget, 'height'), 10)) + 'px';
+				index++;
+				nlNodeToScroll.push(ndP0);
+				nlNodeToScroll.push(ndP1);
+				nlNodeToScroll.push(ndP2);
+
+			}
+			function getRandom(from, to) {
+				return from + Math.random() * (-from + to)
+			}
+			function getFirstNode(nd) {
+				var nlChild = nd.childNodes;
+				for(var i = 0; i < nlChild.length; i++) {
+					if (nlChild.item(i).nodeType === 1) {
+						return nlChild.item(i);
+					}
+				}
+
+			}
+			function getElementViewTop(element){
+				var actualTop = element.offsetTop;
+				var current = element.offsetParent;
+		　　　　while (current !== null){
+		　　　　　　actualTop += current. offsetTop;
+		　　　　　　current = current.offsetParent;
+		　　　　}
+
+　　　　		return actualTop;
+　　		}
+			function scroll() {
+				var nd,
+					scrollTop = parseInt(document.body.scrollTop, 10);
+
+				if (nlNodeToScroll.length < 1) return;
+					for (var i = 0; i < nlNodeToScroll.length; i++) {
+						nd = nlNodeToScroll[i]
+						nd.style.top = -(scrollTop * cardinal[i]) + 'px' 
+					}
+
+			}
+			function supportFeature(feature) {
+				var b = document.body || document.documentElement;
+				var style = b.style,
+					v = ['Moz', 'webkit', 'Webkit', 'Khtml', 'O', 'ms'],
+					f = feature;
+
+				if (typeof style[feature] === 'string') return true;
+				f = f.charAt(0).toUpperCase() + f.substr(1);
+				for (var i = 0 ; i <  v.length; i++) {
+					if (typeof style[v[i] + f] === 'string') {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		avalon.scan();
+		function getElementsByClassName(cn) {
+			if ('querySelector' in document && typeof document.querySelector === 'function') {
+					return document.querySelectorAll('.' + cn);
+				} else if ( 'getElementsByClassName' in document && typeof document.getElementsByClassName === 'function') {
+					return document.getElementsByClassName(cn);
+				} else {
+					elements = document.getElementsByTagName("*");
+					pattern = new RegExp("(^|\\s)" + cn + "(\\s|$)");
+					for (i = 0; i < elements.length; i++) {
+						if (pattern.test(elements[i].className) ) {
+							results.push(elements[i]);
+						}
+					}
+				}
+		}
+    </script>
+</body>
+</html>
