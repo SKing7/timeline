@@ -1,6 +1,6 @@
 var fs = require('fs');
 var dir = '/Users/liuzhe/qunar/avalon.oniui/';
-var dirWWW = dir + 'uiguide_www/';
+var dirWWW = dir + 'www/';
 var files = fs.readdirSync(dir);
 var child = require('child_process');
 var childProcess = require('child_process')
@@ -19,6 +19,7 @@ for(var i = 0; i < files.length; i++){
 			indexJson[monthNum] = indexJson[monthNum] || [];
 			indexJson[monthNum].push({
 				name:baseName,
+				url: '../' + baseName + '/avalon.' + baseName + '.doc.html',
 				cover: 'doc/img/' + baseName + '.png'
 			});
 			child.exec(binPath + ' ' + dirWWW + 'capture.js ' + absPath,  function(err, stdout, stderr) {
