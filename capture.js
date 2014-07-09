@@ -16,7 +16,7 @@ if (system.args.length === 1) {
 	address = system.args[1];
 	page.open(address, function (status) {
 		console.log(address);
-		//page.render(address.match(/\.([^.]+?)\.doc\.html$/)[1] + '.png');
+		page.render(address.match(/\.([^.]+?)\.doc\.html$/)[1] + '.png');
 		phantom.exit();
 	});
 }
