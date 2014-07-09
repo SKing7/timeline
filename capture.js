@@ -10,7 +10,6 @@ page.clipRect = {
 	height:680 
 };
 var address;
-		console.log(system.args);
 if (system.args.length === 1) {
 	phantom.exit(1);
 } else {
