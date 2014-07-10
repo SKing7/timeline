@@ -5,6 +5,7 @@ var dirWWW = '/Users/liuzhe/qunar/www/';
 var files = fs.readdirSync(dir);
 var child = require('child_process');
 var childProcess = require('child_process')
+var co = require('cheerio');
 var phantomjs = require('phantomjs')
 var binPath = phantomjs.path
 var indexJson = {};
@@ -17,12 +18,14 @@ for(var i = 0; i < files.length; i++){
 		var absPath = name + '/avalon.' + baseName + '.doc.html' 
 		if (fs.existsSync(absPath)) {
 			var monthNum = monthIndex[baseName] || Math.ceil(Math.random() * 10);
+			var fileBody = fs.readFileSync(absPath);
+			var $ = co.load(fileBody);
 			indexJson[monthNum] = indexJson[monthNum] || [];
 			indexJson[monthNum].push({
 				name:baseName,
 				url: relativeRes + baseName + '/avalon.' + baseName + '.doc.html',
-				title:'测试标题',
-				des: '这里是描述:accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置和调用accordion，接下来对所有的配置项和可用的API做以说明',
+				title: $('head title').text(),
+				des: $('meta[name="description"]').attr('content') || '暂无描述',
 				cover: 'doc/img/' + baseName + '.png'
 			});
 			child.exec(binPath + ' ' + dirWWW + 'capture.js ' + absPath,  function(err, stdout, stderr) {
