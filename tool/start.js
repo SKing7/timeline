@@ -28,8 +28,8 @@ for(var i = 0; i < files.length; i++){
 				des: $('meta[name="description"]').attr('content') || '暂无描述',
 				cover: 'doc/img/' + baseName + '.png'
 			});
-			child.exec(binPath + ' ' + dirWWW + 'capture.js ' + absPath,  function(err, stdout, stderr) {
-				console.log(absPath + 'don');
+			child.exec(binPath + ' ' + dirWWW + '/tool/capture.js ' + absPath,  function(err, stdout, stderr) {
+				console.log(absPath + 'done');
 				child.exec('mv *.png doc/img/', function () {});
 			})
 		}
