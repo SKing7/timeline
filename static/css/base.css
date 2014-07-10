@@ -22,9 +22,53 @@ html {
 .tree__item {
 	background: url("http://img04.taobaocdn.com/tps/i4/T1je0yXEBfXXan5nrF-473-276.png") no-repeat;
 	width: 460px;
-	height: 264px;
-	padding: 12px 0 0 13px;
+	height: 252px;
+	padding: 12px 0 12px 13px;
 	position: relative;
+}
+.tree__item__main {
+	position:relative;
+	height:100%;
+	overflow:hidden;
+
+}
+.tree__item__main:hover .des {
+	top:0;
+}
+.tree__item__main .des {
+	position:absolute;
+	top:212px;
+	cursor:pointer;
+	transition: top .4s;
+}
+.tree__item__main .des__content {
+	display:block;
+	padding:5px 10px;
+	font-size:12px;
+	color: #EFEFEF;
+	line-height: 2;
+}
+.tree__item__main .des__title {
+	display:block;
+	padding:0 10px;
+	line-height:40px;
+	font-size:18px;
+	color:#FFF;
+	font-weight:bold;
+}
+.tree__item__main .des__bg {
+	width:430px;
+	height:250px;
+	opacity:0.7;
+	color:#FFF;
+	background:#000;
+}
+.tree__item__main .des__main {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
 }
 
 .tree__item--right {

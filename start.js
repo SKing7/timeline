@@ -21,6 +21,8 @@ for(var i = 0; i < files.length; i++){
 			indexJson[monthNum].push({
 				name:baseName,
 				url: relativeRes + baseName + '/avalon.' + baseName + '.doc.html',
+				title:'测试标题',
+				des: '这里是描述:accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置和调用accordion，接下来对所有的配置项和可用的API做以说明',
 				cover: 'doc/img/' + baseName + '.png'
 			});
 			child.exec(binPath + ' ' + dirWWW + 'capture.js ' + absPath,  function(err, stdout, stderr) {
