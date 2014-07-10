@@ -16,7 +16,7 @@ for(var i = 0; i < files.length; i++){
 		//avalon.tooltip.doc.html
 		var absPath = name + '/avalon.' + baseName + '.doc.html' 
 		if (fs.existsSync(absPath)) {
-			var monthNum = monthIndex[baseName] || 6;
+			var monthNum = monthIndex[baseName] || Math.ceil(Math.random() * 10);
 			indexJson[monthNum] = indexJson[monthNum] || [];
 			indexJson[monthNum].push({
 				name:baseName,
@@ -33,3 +33,4 @@ for(var i = 0; i < files.length; i++){
 	}
 }
 fs.writeFile(dirWWW + 'doc/index.js', 'window.indexData = ' + JSON.stringify(indexJson, null, 4), function(err) {}); 
+//index.json {4->[{name,url,title,des}], 5->[]}

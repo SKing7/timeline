@@ -28,12 +28,15 @@
 		for(var i in window.indexData) {
 			if (indexData.hasOwnProperty(i)) {
 				months.push({
-					key:i,
+					key: i,
 					item: indexData[i]
 				});
 			}
 		}
 		vm.circles = circles;
+		months.sort(function (a, b) {
+			return b.key + a.key;
+		})
 		vm.months = months;
 		vm.cb = cb;
 		vm.circleCb = function () {
@@ -83,6 +86,14 @@
 				}	
 			}
 		});
+		var nowIndex = 0;
+		vm.nowIndex= {};
+		for (var i = 0; i < months.length; i++) {
+			vm.nowIndex[months[i].key] = nowIndex;
+			nowIndex += months[i].item.length;
+			console.log(nowIndex);
+		}
+		console.log(vm.nowIndex);
 		function cb() {
 			var child = getFirstNode(this);
 			if (!child) return;
@@ -91,12 +102,25 @@
 			var oStyle = ui.getComputedStyle(child);
 			var viewTop  = getElementViewTop(child);
 			//根据月份下的第一个项目设置坐标位置
-			ndTarget.style.left = (parseInt(oStyle.getPropertyValue('width'), 10) + getRandom(120, 250)) + 'px';
+			if (hasClass(child, 'tree__item--right')) {
+				console.log(monthNum + ':right');
+				ndTarget.style.left = getRandom(120, 250) + 'px';
+			} else {
+				ndTarget.style.left = (parseInt(oStyle.getPropertyValue('width'), 10) + getRandom(120, 250)) + 'px';
+			}
 			ndTarget.style.top =  (viewTop - topEdge) * (cardinal[1] -1) + getRandom(viewTop, viewTop + parseInt(oStyle.getPropertyValue('height'), 10) - parseInt(ui.getComputedStyle(ndTarget, 'height'), 10)) + 'px';
 			index++;
 			nlNodeToScroll.push(ndP0);
 			nlNodeToScroll.push(ndP1);
 			nlNodeToScroll.push(ndP2);
+		}
+		function hasClass(nd, cn) {
+			return new RegExp('(^|\s*)' + cn + '(\s*|$)').test(nd.className);
+		}
+		function getItemByMonth(m) {
+			for(var i = 0; i < months.length; i++) {
+				if (months[i].key == m) return months[i].item.length;
+			}
 		}
 		function getRandom(from, to) {
 			return from + Math.random() * (-from + to)
