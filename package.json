@@ -1,1 +1,16 @@
-reload/package.json
+{
+  "name": "qunar-doc-www",
+  "version": "0.0.1",
+  "dependencies": {
+    "grunt-cli": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-less": "latest",
+    "grunt-contrib-watch": "latest"
+  },
+  "devDependencies": {
+    "cheerio": "^0.17.0",
+    "grunt": "^0.4.5",
+    "phantomjs": "^1.9.7-14"
+  }
+}
