@@ -1,5 +1,5 @@
 var fs = require('fs');
-var relativeRes = 'src/avalon.oniui/';
+var relativeRes = 'avalon.oniui/';
 var dirWWW = process.cwd() + '/';
 var dir = dirWWW + 'avalon.oniui/';
 var files = fs.readdirSync(dir);
