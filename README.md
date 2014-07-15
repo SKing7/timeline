@@ -3,7 +3,7 @@
 > 根据指定规则(规则看[这里][1])抓取ui doc页面的信息（title和description，页面预览图），形成timeline
 
 #### **安装步骤**
-
+> 确保你的机器上已经安装了nodejs,grunt,phantomjs
  1. git clone 本项目到本地
  2. cd ui_timeline
  3. npm install
