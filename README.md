@@ -10,7 +10,7 @@
  4. git clone https://github.com/RubyLouvre/avalon.oniui.git
  5. node server.js 然后访问3000端口号
 
-#### **如何重新部署
+#### **如何重新部署**
 
  1. 执行grunt watch
  2. 另开窗口，执行目录下得build.sh : ./bash.sh(可能没有执行权限，运行chmod a+x build.sh)
