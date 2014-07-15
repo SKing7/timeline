@@ -1,7 +1,7 @@
 var fs = require('fs');
-var relativeRes = '../avalon.oniui/';
-var dir = '/Users/liuzhe/qunar/avalon.oniui/';
-var dirWWW = '/Users/liuzhe/qunar/www/';
+var relativeRes = 'src/avalon.oniui/';
+var dirWWW = process.cwd() + '/';
+var dir = dirWWW + 'avalon.oniui/';
 var files = fs.readdirSync(dir);
 var child = require('child_process');
 var childProcess = require('child_process')
@@ -36,4 +36,3 @@ for(var i = 0; i < files.length; i++){
 	}
 }
 fs.writeFile(dirWWW + 'doc/index.js', 'window.indexData = ' + JSON.stringify(indexJson, null, 4), function(err) {}); 
-//index.json {4->[{name,url,title,des}], 5->[]}
