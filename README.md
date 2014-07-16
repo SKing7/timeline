@@ -15,6 +15,7 @@
  1. 执行grunt watch
  2. 另开窗口，执行目录下得build.sh : ./bash.sh(可能没有执行权限，运行chmod a+x build.sh)
 
+
  
   [1]: http://wiki.corp.qunar.com/pages/viewpage.action?pageId=58054844
   [2]: http://phantomjs.org/download.html

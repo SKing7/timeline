@@ -17,7 +17,6 @@
 	var cardinal = [1, 1.5, 1.8];
 	avalon.define('www_uiguide', function (vm) {
 		var supportTransition = !supportFeature('transition');
-		var timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
 		var index = 0;
 		var months = [];
 		var circles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
@@ -49,14 +48,29 @@
 		setFrame(function () {
 			vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
 		}, 50);
-
+		var scrollEnd = true;
+		var scrollTimer;
 		avalon.bind(window, 'scroll', function () {
+			scrollEnd = false;
+			window.clearTimeout(scrollTimer);
+			scrollTimer = window.setTimeout(function () {
+				scrollEnd = true;
+				window.clearTimeout(timer);
+			}, 50);
 			var sTop  = document.body.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 
 			if (supportTransition) {
 				scroll();
 			} else {
+				var timingFun;
+				if (scrollEnd) {
+					timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
+				} else {
+					timingFun = function (diffTime, duration) {
+						return diffTime / duration;
+					}
+				}
 				clearFrame(timer);
 				var scrollTop = parseInt(sTop, 10);
 				var top,
@@ -75,7 +89,7 @@
 				setFrame(function () {
 					for (var i = 0; i < nlNodeToScroll.length; i++) {
 						nd = nlNodeToScroll[i];
-						nd.style.top = getPx(initTop[i], i) * cardinal[i] + 'px' 
+						nd.style.top = initTop[i] + 50 * cardinal[i] + 'px' 
 					}
 				});
 				function getPx(initTop, i) {
