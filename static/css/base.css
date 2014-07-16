@@ -151,8 +151,11 @@ html {
 	top:0;
 	width: 100%;
 	z-index:10;
+	/*
 	transition-property: top;
 	transition-duration: .8s;
+	transition-timing-function: ease-out;
+	*/
 }
 
 .parallax1 {

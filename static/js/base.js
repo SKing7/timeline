@@ -16,7 +16,7 @@
 	var windowH = window.innerHeight;
 	var cardinal = [1, 1.5, 1.8];
 	avalon.define('www_uiguide', function (vm) {
-		var supportTransition = supportFeature('transition');
+		var supportTransition = !supportFeature('transition');
 		var timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
 		var index = 0;
 		var months = [];
@@ -91,9 +91,7 @@
 		for (var i = 0; i < months.length; i++) {
 			vm.nowIndex[months[i].key] = nowIndex;
 			nowIndex += months[i].item.length;
-			console.log(nowIndex);
 		}
-		console.log(vm.nowIndex);
 		function cb() {
 			var child = getFirstNode(this);
 			if (!child) return;
@@ -103,7 +101,6 @@
 			var viewTop  = getElementViewTop(child);
 			//根据月份下的第一个项目设置坐标位置
 			if (hasClass(child, 'tree__item--right')) {
-				console.log(monthNum + ':right');
 				ndTarget.style.left = getRandom(120, 250) + 'px';
 			} else {
 				ndTarget.style.left = (parseInt(oStyle.getPropertyValue('width'), 10) + getRandom(120, 250)) + 'px';
