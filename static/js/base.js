@@ -50,27 +50,22 @@
 		}, 50);
 		var scrollEnd = true;
 		var scrollTimer;
+		var timingFun;
+		timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
 		avalon.bind(window, 'scroll', function () {
-			scrollEnd = false;
-			window.clearTimeout(scrollTimer);
-			scrollTimer = window.setTimeout(function () {
-				scrollEnd = true;
-				window.clearTimeout(timer);
-			}, 50);
+
+			//scrollEnd = false;
+			//window.clearTimeout(scrollTimer);
+			//scrollTimer = window.setTimeout(function () {
+			//	scrollEnd = true;
+			//	window.clearTimeout(timer);
+			//}, 50);
 			var sTop  = document.body.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 
 			if (supportTransition) {
 				scroll();
 			} else {
-				var timingFun;
-				if (scrollEnd) {
-					timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
-				} else {
-					timingFun = function (diffTime, duration) {
-						return diffTime / duration;
-					}
-				}
 				clearFrame(timer);
 				var scrollTop = parseInt(sTop, 10);
 				var top,
@@ -89,7 +84,7 @@
 				setFrame(function () {
 					for (var i = 0; i < nlNodeToScroll.length; i++) {
 						nd = nlNodeToScroll[i];
-						nd.style.top = initTop[i] + 50 * cardinal[i] + 'px' 
+						nd.style.top = getPx(initTop[i], i) * cardinal[i] + 'px' 
 					}
 				});
 				function getPx(initTop, i) {
