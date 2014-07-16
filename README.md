@@ -3,9 +3,9 @@
 > 根据指定规则(规则看[这里][1])抓取ui doc页面的信息（title和description，页面预览图），形成timeline
 
 #### **安装步骤**
-> 确保你的机器上已经安装了nodejs,grunt,phantomjs
+> 确保你的机器上已经安装了nodejs,grunt,[phantomjs][2]
  1. git clone 本项目到本地
- 2. cd ui_timeline
+ 2. cd ui_timeline(确保你的用户有当前目录的读写权限)
  3. npm install
  4. git clone https://github.com/RubyLouvre/avalon.oniui.git
  5. node server.js 然后访问3000端口号
@@ -17,3 +17,4 @@
 
  
   [1]: http://wiki.corp.qunar.com/pages/viewpage.action?pageId=58054844
+  [2]: http://phantomjs.org/download.html
