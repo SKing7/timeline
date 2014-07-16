@@ -29,7 +29,6 @@ for(var i = 0; i < files.length; i++){
 				cover: 'doc/img/' + baseName + '.png'
 			});
 			child.exec(binPath + ' ' + dirWWW + '/tool/capture.js ' + absPath,  function(err, stdout, stderr) {
-				console.log(absPath + 'done');
 				child.exec('mv *.png doc/img/', function () {});
 			})
 		}
