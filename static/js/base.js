@@ -15,12 +15,27 @@
 	ndP2.style.top=0;
 	var windowH = window.innerHeight;
 	var cardinal = [1, 1.5, 1.8];
+	window.clearRequestInterval = function(handle) {
+		//window.cancelAnimationFrame ? window.cancelAnimationFrame(handle.value) :
+		//window.webkitCancelAnimationFrame ? window.webkitCancelAnimationFrame(handle.value) :
+		//window.webkitCancelRequestAnimationFrame ? window.webkitCancelRequestAnimationFrame(handle.value) : /* Support for legacy API */
+		//window.mozCancelRequestAnimationFrame ? window.mozCancelRequestAnimationFrame(handle.value) :
+		//window.oCancelRequestAnimationFrame	? window.oCancelRequestAnimationFrame(handle.value) :
+		//window.msCancelRequestAnimationFrame ? window.msCancelRequestAnimationFrame(handle.value) :
+		clearInterval(handle);
+	}
+	window.requestAnimFrame = window.requestAnimationFrame || 
+		window.webkitRequestAnimationFrame || 
+		window.mozRequestAnimationFrame    || 
+		window.oRequestAnimationFrame      || 
+		window.msRequestAnimationFrame;
+
 	avalon.define('www_uiguide', function (vm) {
 		var index = 0;
 		var months = [];
 		var circles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
 		var nlNodeToScroll = [];
-		var duration = 800; 
+		var duration = 1000; 
 		var timer;
 		var storeScrollTop = document.body.scrollTop;
 		for(var i in window.indexData) {
@@ -44,25 +59,25 @@
 			}
 		}
 		vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
-		setInterval(function () {
+		setTimeout(function () {
 			vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
-		}, 50);
+		}, 500);
 		var scrollEnd = true;
 		var scrollTimer;
 		var timingFun;
-		timingFun = Bezier.unitBezier(0.18, 0.73, 0.25,1);
+		timingFun = Bezier.unitBezier(0.13, 0.4, 0, 0.99);
+		timerQ = [];
 		avalon.bind(window, 'scroll', function () {
-
-			//scrollEnd = false;
-			//window.clearTimeout(scrollTimer);
-			//scrollTimer = window.setTimeout(function () {
-			//	scrollEnd = true;
-			//	window.clearTimeout(timer);
-			//}, 50);
 			var sTop  = document.body.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 
-			clearFrame(timer);
+			if (timer) {
+				timerQ.push(timer);
+				window.setTimeout(function() {
+					for(var i = 0; i < timerQ.length; i++)
+						window.clearRequestInterval(timerQ[i])
+				}, 500)
+			}
 			var scrollTop = parseInt(sTop, 10);
 			var top,
 				diff,	
@@ -77,16 +92,16 @@
 				initTop[i] = parseInt(nlNodeToScroll[i].style.top, 10) || 0;
 			}
 
-			setFrame(function () {
+			timer = setFrame(function () {
 				for (var i = 0; i < nlNodeToScroll.length; i++) {
 					nd = nlNodeToScroll[i];
 					nd.style.top = getPx(initTop[i], i) * cardinal[i] + 'px' 
 				}
-			});
+			}, 2);
 			function getPx(initTop, i) {
 				if (isNaN(+initTop)) return;
 				diffIndex = Math.min((new Date().getTime() - startTime) / duration, 1);
-				target = initTop / cardinal[i] +  timingFun(diffIndex, 800) * (-scrollTop - initTop / cardinal[i]);
+				target = initTop / cardinal[i] +  timingFun(diffIndex, duration) * (-scrollTop - initTop / cardinal[i]);
 				return delta > 0 ? Math.max(target, -scrollTop) : Math.min(target, -scrollTop);
 			}	
 		});
@@ -144,8 +159,8 @@
 	　　　　　　current = current.offsetParent;
 	　　　　}
 
-	　　　　		return actualTop;
-	　　		}
+	　　　　return actualTop;
+	　　}
 		function scroll() {
 			var nd,
 				scrollTop = parseInt(document.body.scrollTop, 10);
@@ -173,11 +188,21 @@
 			}
 			return false;
 		}
-		function setFrame(cb, frameNum) {
-			timer = setInterval(cb, 1000/60)
-		}
-		function clearFrame(id) {
-			clearInterval(id);
+		function setFrame(cb, time) {
+			time = time || 1;
+			//if (!requestAnimFrame) 
+			return setInterval(cb, 1000/30)
+			var handle = new Object();
+			handle.time = 1;
+			function loop() {
+				if (handle.time % time === 0) {
+					cb();
+				}
+				handle.value = requestAnimFrame(loop);
+				handle.time++;
+			};
+			handle.value = requestAnimFrame(loop);
+			return handle;
 		}
 	});
 	avalon.scan();
