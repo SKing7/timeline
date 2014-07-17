@@ -44,7 +44,7 @@
 			}
 		}
 		vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
-		setFrame(function () {
+		setInterval(function () {
 			vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
 		}, 50);
 		var scrollEnd = true;
@@ -174,24 +174,10 @@
 			return false;
 		}
 		function setFrame(cb, frameNum) {
-			if (window.requestAnimationFrame && !frameNum) {
-				timer = window.requestAnimationFrame(function () {
-					cb();
-					timer = window.requestAnimationFrame(arguments.callee);
-				});
-			} else {
-				timer =  window.setTimeout(function () {
-					cb();
-					window.setTimeout(arguments.callee, 1000 /60);
-				}, 1000 * (frameNum || 1)/ 60 );
-			}
+			timer = setInterval(cb, 1000/60)
 		}
 		function clearFrame(id) {
-			if (window.cancelAnimationFrame) {
-				window.cancelAnimationFrame(id);
-			} else {
-				window.clearTimeout(id);
-			}
+			clearInterval(id);
 		}
 	});
 	avalon.scan();
