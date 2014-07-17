@@ -5,9 +5,10 @@ page.viewportSize = {
 	  width: 1024,
 	  height:680 
 };
+//w:430
 page.clipRect = {
 	width: 1024,
-	height:680 
+	height:595 
 };
 var address;
 if (system.args.length === 1) {
