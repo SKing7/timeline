@@ -51,7 +51,7 @@
 		var scrollEnd = true;
 		var scrollTimer;
 		var timingFun;
-		timingFun = Bezier.unitBezier(0.25, 0.1, 0.25, 1.0);
+		timingFun = Bezier.unitBezier(0.18, 0.73, 0.25,1);
 		avalon.bind(window, 'scroll', function () {
 
 			//scrollEnd = false;
