@@ -16,7 +16,6 @@
 	var windowH = window.innerHeight;
 	var cardinal = [1, 1.5, 1.8];
 	avalon.define('www_uiguide', function (vm) {
-		var supportTransition = !supportFeature('transition');
 		var index = 0;
 		var months = [];
 		var circles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
@@ -63,37 +62,33 @@
 			var sTop  = document.body.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 
-			if (supportTransition) {
-				scroll();
-			} else {
-				clearFrame(timer);
-				var scrollTop = parseInt(sTop, 10);
-				var top,
-					diff,	
-					step = 5,
-					diffIndex,
-					target,
-					initTop = [],
-					startTime = new Date().getTime(),
-					nd;
+			clearFrame(timer);
+			var scrollTop = parseInt(sTop, 10);
+			var top,
+				diff,	
+				step = 5,
+				diffIndex,
+				target,
+				initTop = [],
+				startTime = new Date().getTime(),
+				nd;
 
-				for (var i = 0; i < nlNodeToScroll.length; i++) {
-					initTop[i] = parseInt(nlNodeToScroll[i].style.top, 10) || 0;
-				}
-
-				setFrame(function () {
-					for (var i = 0; i < nlNodeToScroll.length; i++) {
-						nd = nlNodeToScroll[i];
-						nd.style.top = getPx(initTop[i], i) * cardinal[i] + 'px' 
-					}
-				});
-				function getPx(initTop, i) {
-					if (isNaN(+initTop)) return;
-					diffIndex = Math.min((new Date().getTime() - startTime) / duration, 1);
-					target = initTop / cardinal[i] +  timingFun(diffIndex, 800) * (-scrollTop - initTop / cardinal[i]);
-					return delta > 0 ? Math.max(target, -scrollTop) : Math.min(target, -scrollTop);
-				}	
+			for (var i = 0; i < nlNodeToScroll.length; i++) {
+				initTop[i] = parseInt(nlNodeToScroll[i].style.top, 10) || 0;
 			}
+
+			setFrame(function () {
+				for (var i = 0; i < nlNodeToScroll.length; i++) {
+					nd = nlNodeToScroll[i];
+					nd.style.top = getPx(initTop[i], i) * cardinal[i] + 'px' 
+				}
+			});
+			function getPx(initTop, i) {
+				if (isNaN(+initTop)) return;
+				diffIndex = Math.min((new Date().getTime() - startTime) / duration, 1);
+				target = initTop / cardinal[i] +  timingFun(diffIndex, 800) * (-scrollTop - initTop / cardinal[i]);
+				return delta > 0 ? Math.max(target, -scrollTop) : Math.min(target, -scrollTop);
+			}	
 		});
 		var nowIndex = 0;
 		vm.nowIndex= {};
@@ -114,7 +109,8 @@
 			} else {
 				ndTarget.style.left = (parseInt(oStyle.getPropertyValue('width'), 10) + getRandom(120, 250)) + 'px';
 			}
-			ndTarget.style.top =  (viewTop - topEdge) * (cardinal[1] -1) + getRandom(viewTop, viewTop + parseInt(oStyle.getPropertyValue('height'), 10) - parseInt(ui.getComputedStyle(ndTarget, 'height'), 10)) + 'px';
+			ndTarget.style.top =  (viewTop - topEdge) * (cardinal[1] -1) + 
+				getRandom(viewTop, viewTop + parseInt(oStyle.getPropertyValue('height'), 10) - parseInt(ui.getComputedStyle(ndTarget, 'height'), 10)) + 'px';
 			index++;
 			nlNodeToScroll.push(ndP0);
 			nlNodeToScroll.push(ndP1);
